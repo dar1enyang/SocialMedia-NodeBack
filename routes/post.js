@@ -1,11 +1,12 @@
 const express = require('express');
-const postController = require('../controllers/post');
+const {createPost, getPosts} = require('../controllers/post');
+const { createPostValidaotr } = require('../validators');
+
 
 const router = express.Router();
 // Dont need to specify index
-const validator = require('../validators');
-router.get('/', postController.getPosts);
+router.get('/', getPosts);
 
-router.post('/post', validator.createPostValidaotr, postController.createPost);
+router.post('/post', createPostValidaotr, createPost);
 
 module.exports = router;
