@@ -1,8 +1,6 @@
 const express = require('express');
 const app = express();
 const morgan = require('morgan');
-// bring in routes
-const postRoutes = require('./routes/post');
 // import mongoose
 const mongoose = require('mongoose');
 // load env variables
@@ -12,11 +10,16 @@ const bodyParser = require('body-parser')
 const expressValidator = require('express-validator')
 
 
+// bring in routes
+const postRoutes = require('./routes/post');
+const authRoutes = require('./routes/auth');
+
 // middleware
 app.use(morgan('dev'));
 app.use(bodyParser.json());
 app.use(expressValidator());
 app.use("/", postRoutes);
+app.use("/", authRoutes);
 //
 
 
