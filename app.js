@@ -10,6 +10,8 @@ const bodyParser = require("body-parser");
 const cookieParser = require('cookie-parser');
 const expressValidator = require('express-validator')
 const fs = require("fs");
+const cors = require('cors');
+
 
 // bring in routes
 const postRoutes = require('./routes/post');
@@ -20,6 +22,7 @@ const userRoutes = require('./routes/user');
 app.use(morgan('dev'));
 app.use(bodyParser.json());
 app.use(cookieParser());
+app.use(cors());
 app.use(expressValidator());
 app.use("/", postRoutes);
 app.use("/", authRoutes);
