@@ -9,7 +9,7 @@ dotenv.config()
 const bodyParser = require("body-parser");
 const cookieParser = require('cookie-parser');
 const expressValidator = require('express-validator')
-
+const fs = require("fs");
 
 // bring in routes
 const postRoutes = require('./routes/post');
@@ -29,8 +29,18 @@ app.use(function (err, req, res, next) {
     res.status(401).json({ error: "Unauthorized!" });
   }
 });
-//
-
+// apiDocs
+app.get("/", (req, res) => {
+    fs.readFile("docs/APIDocs.json", (err, data) => {
+        if (err) {
+            res.status(400).json({
+                error: err
+            });
+        }
+        const docs = JSON.parse(data);
+        res.json(docs);
+    });
+});
 
 //db connection
 mongoose.connect(
