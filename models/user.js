@@ -1,29 +1,55 @@
-const mongoose = require('mongoose');
-const uuidv1 = require('uuid/v1');
+const mongoose = require("mongoose");
+const uuidv1 = require("uuid/v1");
 const crypto = require("crypto");
+const { ObjectId } = mongoose.Schema;
 
 const userSchema = new mongoose.Schema({
-    name : {
-        type : String,
-        trim : true,
-        required : true
+    name: {
+        type: String,
+        trim: true,
+        required: true
     },
-    email : {
-        type : String,
-        trim : true,
-        required : true
+    email: {
+        type: String,
+        trim: true,
+        required: true
     },
     hashed_password: {
         type: String,
         required: true
     },
-    salt : String,
-    created : {
-        type : Date,
-        default : Date.now
+    salt: String,
+    created: {
+        type: Date,
+        default: Date.now
     },
-    updated : Date
+    updated: Date,
+    photo: {
+        data: Buffer,
+        contentType: String
+    },
+    about: {
+        type: String,
+        trim: true
+    },
+    following: [{ type: ObjectId, ref: "User" }],
+    followers: [{ type: ObjectId, ref: "User" }],
+    resetPasswordLink: {
+        data: String,
+        default: ""
+    },
+    role: {
+        type: String,
+        default: "subscriber"
+    }
 });
+
+/**
+ * Virtual fields are additional fields for a given model.
+ * Their values can be set manually or automatically with defined functionality.
+ * Keep in mind: virtual properties (password) don’t get persisted in the database.
+ * They only exist logically and are not written to the document’s collection.
+ */
 
 // virtual field
 userSchema
@@ -42,6 +68,10 @@ userSchema
 
 // methods
 userSchema.methods = {
+    authenticate: function(plainText) {
+        return this.encryptPassword(plainText) === this.hashed_password;
+    },
+
     encryptPassword: function(password) {
         if (!password) return "";
         try {
@@ -53,30 +83,6 @@ userSchema.methods = {
             return "";
         }
     }
-}
+};
 
-module.exports = mongoose.model('User', userSchema);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+module.exports = mongoose.model("User", userSchema);
