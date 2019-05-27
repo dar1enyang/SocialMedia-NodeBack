@@ -9,7 +9,8 @@ const {
   addFollowing,
   addFollower,
   removeFollowing,
-  removeFollower
+  removeFollower,
+  findPeople
 } = require('../controllers/user');
 
 const { requireSignin } = require('../controllers/auth');
@@ -25,6 +26,9 @@ router.put('/user/:userId', requireSignin, updateUser);
 router.delete('/user/:userId', requireSignin, deleteUser);
 // photo
 router.get('/user/photo/:userId', userPhoto);
+
+// who to follow
+router.get('/user/findpeople/:userId', requireSignin, findPeople);
 
 // any route containing :userId, app will first execute userByID()
 router.param('userId', userById);
